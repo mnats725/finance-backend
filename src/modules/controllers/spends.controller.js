@@ -22,3 +22,14 @@ module.exports.createSpend = (req, res) => {
     res.status(400).send("Error! Params not correct");
   }
 };
+
+module.exports.deleteSpend = (req, res) => {
+  const delteValue = req.query;
+  Spend.deleteOne({ _id: delteValue._id })
+    .then((result) => {
+      res.status(200).send(result);
+    })
+    .catch(() => {
+      res.status(400).send("Error! Not correct Delete Value.");
+    });
+};
