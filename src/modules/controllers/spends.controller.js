@@ -13,6 +13,7 @@ module.exports.getAllSpends = (req, res) => {
 
 module.exports.createSpend = (req, res) => {
   const body = req.body;
+
   if (body.hasOwnProperty("spendName") && body.hasOwnProperty("spendValue")) {
     body.spendDate = date;
     Spend.create(body).then((result) => {
@@ -25,6 +26,7 @@ module.exports.createSpend = (req, res) => {
 
 module.exports.deleteSpend = (req, res) => {
   const delteValue = req.query;
+
   Spend.deleteOne({ _id: delteValue._id })
     .then((result) => {
       res.status(200).send(result);
@@ -32,4 +34,28 @@ module.exports.deleteSpend = (req, res) => {
     .catch(() => {
       res.status(400).send("Error! Not correct Delete Value.");
     });
+};
+
+module.exports.editSpend = (req, res) => {
+  const incomingValue = req.query;
+  const { spendDate, spendName, spendValue } = req.body;
+
+  if (spendDate || spendName || spendValue) {
+    Spend.updateOne(
+      { _id: incomingValue._id },
+      {
+        spendName: spendName,
+        spendValue: spendValue,
+        spendDate: spendDate,
+      }
+    )
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch(() => {
+        res.status(400).send("Error! Not correct values for editing");
+      });
+  } else {
+    res.send("Check params!");
+  }
 };
